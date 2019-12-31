@@ -1,2 +1,2 @@
 # Simple 
-# 一个类似Jquery轻量JavaScript框架
+# 一个类似Jquery的轻量JavaScript框架

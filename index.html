@@ -1,11 +1,21 @@
 <html>
   <head>
     <title>demo</title>
-    <script src="/Simple/Simple.js"></script>
+    <script src="./Simple.js"></script>
   </head>
 
   <body>
     <style>
+      .warpper{
+        position: relative;
+        width: 304px;
+        height:304px;
+        border: 10px solid bisque;
+        box-sizing: content-box;
+      }
+      p{
+        text-align: center;
+      }
       .donghua {
         position: absolute;
         left: 50px;
@@ -14,7 +24,7 @@
         width: 100px;
       }
     </style>
-    <div>
+    <div class="warpper">
       <p>动画</p>
       <div class="donghua"></div>
     </div>

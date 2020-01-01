@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>demo</title>
+    <script src="./Simple.js"></script>
+  </head>
+
+  <body>
+    <style>
+      .donghua {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        height: 100px;
+        width: 100px;
+      }
+    </style>
+    <div>
+      <p>动画</p>
+      <div class="donghua"></div>
+    </div>
+    <script>
+      S(".donghua").css('backgroundColor','aqua').animate({
+        type: "easeOutQuart",
+        from: 0,
+        to: 1,
+        duration: 2500,
+        main: function(doms) {
+          for (var i = 0; i < doms.length; i++) {
+            var left = doms[i].currentStyle
+              ? doms[i].currentStyle["left"]
+              : getComputedStyle(doms[i], false)["left"];
+            var top = doms[i].currentStyle
+              ? doms[i].currentStyle["top"]
+              : getComputedStyle(doms[i], false)["top"];
+            doms[i].style.left = + left.match(/\d+(?=px)/)[0] + 1 + "px";
+            doms[i].style.top = + top.match(/\d+(?=px)/)[0] + 1 + "px";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -84,8 +84,8 @@
   };
   S.extend({
     camelCase: function(str) {
-      return str.replace(/\-(\w)/g, function(match, letter) {
-        return letter.toUpperCase();
+      return str.replace(/\-(\w)/g, function(match, varter) {
+        return varter.toUpperCase();
       });
     },
     trim: function() {
@@ -143,8 +143,37 @@
       for (; --i >= 0; ) {
         _on(this[i], type, fn, data);
       }
-      return this
+      return this;
     },
+    //设置或者获取元素样式
+    css: function() {
+      var arg = arguments,
+        len = arg.length;
+      if (this.length < 1) {
+        return this;
+      }
+      if (len == 1) {
+        if (typeof arg[0] == "string") {
+          if (this[0].currentStyle) {
+            // 如果是IE浏览器
+            return this[0].currentStyle[name];
+          } else {
+            return getComputedStyle(this[0], false)[name];
+          }
+        } else if (typeof arg[0] === "object") {
+          for (var i in arg[0]) {
+            for (var j = this.length - 1; j >= 0; j--) {
+              this[j].style[S.camelCase(i)] = arg[0][i];
+            }
+          }
+        }
+      }else if (len ==2) {
+        for (var j = this.length - 1; j >= 0; j--) {
+          this[j].style[S.camelCase(arg[0])] = arg[1];
+        }
+      }
+    },
+    // 获取或设置元素属性
     attr: function() {
       var arg = arguments,
         len = arg.length;
@@ -161,31 +190,79 @@
             }
           }
         }
-      }else if(len===2){
-          for(var j = this.length-1;j>=0;j--){
-              this[j].setAttribute(arg[0],arg[1])
-          }
+      } else if (len === 2) {
+        for (var j = this.length - 1; j >= 0; j--) {
+          this[j].setAttribute(arg[0], arg[1]);
+        }
+      }
+      return this;
+    },
+    html: function() {
+      var arg = arguments,
+        len = arg.length;
+      if (this.length < 1) {
+        return this;
+      }
+      if (len === 0) {
+        return this[0].innerHTML;
+      } else if (len === 1) {
+        for (var i = this.length - 1; i >= 0; i--) {
+          this[i].innerHTML = arg[0];
+        }
+      } else if (len === 2 && arg[1]) {
+        for (var i = this.length - 1; i >= 0; i--) {
+          this[i].innerHTML += arg[0];
+        }
+      }
+      return this;
+    },
+    hasClass:function (val) {
+      if(!this[0]){
+        return;
+      }
+      var value = S.trim(val);
+      return this[0].className && this[0].className.indexOf(value)>=0?true:false
+    },
+    addClass:function (val) {
+      var value = S.trim(val),
+      str ='';
+      for (var i = 0; i < this.length; i++) {
+        str = this[i].className;
+        if(!~str.indexOf(value)){
+          this[i].className +=  ' ' + value
+        }
+        
       }
       return this
     },
-    html:function(){
-        var arg = arguments,
-        len = arg.length;
-        if(this.length<1){
-            return this;
-        }
-        if(len === 0){
-            return this[0].innerHTML;
-        }else if(len === 1){
-            for(var i = this.length-1;i>=0;i--){
-                this[i].innerHTML = arg[0]
+    removeClass:function (val) {
+      var value = S.trim(val),
+      classNameArr;
+      for (var i = 0; i < this.length; i++) {
+        
+        if(this[i].className && ~this[i].className.indexOf(value)){
+          classNameArr = this[i].className.split(' ')
+          for (var j = 0; j < classNameArr.length; j++) {
+            if(classNameArr[j] && classNameArr[j] == value){
+              classNameArr.splice(j,1)
+              j--;
             }
-        }else if(len === 2 && arg[1]){
-            for(var i = this.length-1;i>=0;i--){
-                this[i].innerHTML += arg[0]
-            }
+            
+          }
+          this[i].className=classNameArr.join(' ')
         }
-        return this
+        
+      }
+      return this
+    },
+    //添加子元素
+    appendTo:function(parent){
+      var doms = S(parent);
+      if(doms.length){
+        for(var j = this.length-1;j>=0;j--){
+          doms[0].appendChild(this[j])
+        }
+      }
     }
   });
   S.noConflict = function(library) {
@@ -193,7 +270,7 @@
       window.$ = library;
     } else {
       window.$ = null;
-      delete window.$;
+      devare window.$;
     }
     return S;
   };
